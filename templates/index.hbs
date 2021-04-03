@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./css/styles.css">
+        <link rel="icon" href="/img/weather.png">
+        <title>Weather</title>
+    </head>
+    <body>
+        <h1>{{ title }}</h1>
+        {{>header}}
+        <div class="portrait">
+            <img src="./img/A.png">
+            <form>
+                <input placeholder="location">
+                <button>submit</button>
+            </form>
+            <p id="temperature"></p>
+            <p id="err"></p>
+        </div>
+        <div>
+            {{>footer}}
+        </div>
+        <script src="./js/main.js"></script>
+    </body>
+</html>
