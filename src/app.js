@@ -78,6 +78,6 @@ app.get('*', (req, res) => {
 })
 
 
-app.listen(6969, () => {
+app.listen(port, () => {
     console.log('server running port' + port)
 })
