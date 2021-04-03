@@ -21,7 +21,7 @@ weatherform.addEventListener('submit', (e) => {
     if (!location){
         p1.textContent = "No Address"
     } else {
-        fetch('http://localhost:6969/weather?address=' + location).then((response) => {
+        fetch('/weather?address=' + location).then((response) => {
         response.json().then((data) => {
             if (data.error) {
                 p1.textContent = data.error
