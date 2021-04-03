@@ -1,4 +1,3 @@
-const { dir } = require('console')
 const express = require('express')
 const path = require('path')
 const hbs = require('hbs')
