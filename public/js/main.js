@@ -3,7 +3,7 @@ console.log('client js loaded')
 
 
 
-fetch('http://localhost:6969/weather?address=boston').then((response) => {
+fetch('/weather?address=boston').then((response) => {
     response.json().then((data) => {
         console.log(data.weather[0].address)
     })
