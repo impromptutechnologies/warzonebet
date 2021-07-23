@@ -208,7 +208,7 @@ app.get("/fakedata", async (req, res) => {
 app.post("/auth/claim", async (req, res) => {
   try {
     const timeStart = req.body.timeStart
-    const outcome = await Outcome.find({ timeStart: "07-23 11:00" });
+    const outcome = await Outcome.find({ timeStart: timeStart });
     const bet = await Bet.findOne({
       creatorEmail: req.session.email,
       timeStart: timeStart,
