@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Account</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="main-content">
+        {{>header}}
+        <p>{{name}}</p>
+        <p>Tokens: {{tokens}}</p>
+        {{#if codAccount}}
+            <h3>{{codAccount}}</h3>
+            <h3>{{codPlatform}}</h3>
+        {{else}}
+            <h2>Connect your Account</h2>
+            <form action="/auth/connect" method="post">
+            <input placeholder="ID" name="id">
+            <input value="{{name}}" name="email" hidden>
+            <select name="platform">
+                <option value="psn">PSN</option>
+                <option value="battle">BATTLE.NET</option>
+                <option value="xbl">XBL</option>
+            </select>
+            <button type="submit">Connect</button>
+           
+        </form>
+         {{/if}}
+        
+        <h2>Redeem Tokens</h2>
+        <form action="/auth/redeem" method="post">
+            <input placeholder="Redeem Amount">
+            <select>
+                <option>DOGE</option>
+                <option>BTC</option>
+            </select>
+           
+        </form>
+        <h2>Gift Cards (5 USD)</h2>
+        <form action="/auth/giftcard" method="post">
+            <select>
+                <option>Spotify</option>
+                <option>Starbucks</option>
+                <option>Pornhub Premium</option>
+                <option>Pornhub</option>
+            </select>
+            <button>Purchase</button>
+        </form>
+        <a href="/logout"><button style="margin-top:50px;">Logout</button></a>
+        <h2>Open Tournaments</h2>
+        {{#if games}}
+                 {{#each games}}
+                    <p>{{this.timeStart}}</p>
+                     <p>{{this.timeEnd}}</p>
+                    <p>{{this.betAmount}}</p>
+                      <p>{{this.status}}</p>
+                 {{/each}} 
+            {{else}}
+                 <option value="No Time">No Tournaments</option>
+            {{/if}}
+            <h2>Finished Tournaments</h2>
+        {{#if gamesf}}
+                 {{#each gamesf}}
+                    <p>{{this.timeStart}}</p>
+                     <p>{{this.timeEnd}}</p>
+                    <p>{{this.betAmount}}</p>
+                      <p>{{this.status}}</p>
+                      <form action="/auth/claim" method="post">
+                          <input value="{{this.timeStart}}" hidden required name="timeStart">
+                          <button type="submit">Claim</button>
+                      </form>
+                 {{/each}} 
+            {{else}}
+                 <option value="No Time">No Tournaments</option>
+            {{/if}}
+
+        
+    </div>
+    
+    {{>footer}}
+</body>
+
+</html>

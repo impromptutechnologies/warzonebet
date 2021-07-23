@@ -40,3 +40,6 @@ header a {
 .portrait {
     width: 250px;
 }
+button{
+    cursor:pointer
+}

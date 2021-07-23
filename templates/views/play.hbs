@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Play</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="main-content">
+        {{>header}}
+        <h2>Place Bet</h2>
+        <p>Tokens: {{tokens}}</p>
+
+        <form action="/auth/bet" method="post">
+            <p>Tokens</p>
+            <input name="username" value="{{codAccount}}" hidden>
+            <input name="platform" value="{{platform}}" hidden>
+            <select name="amount">
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+                <option value="1500">1500</option>
+            </select>
+            <p>Start Time</p>
+           <select name="hour">
+               {{#if options}}
+                 {{#each options}}
+                    <option value="{{this.timeStart}}">{{this.timeStart}}</option>
+                 {{/each}} 
+            {{else}}
+                 <option value="No Time">No Times</option>
+            {{/if}}
+                
+            </select><br>
+            <button style="margin-top:20px">Enter Tournament</button>
+        </form>
+
+        
+    </div>
+    
+    {{>footer}}
+</body>
+
+</html>

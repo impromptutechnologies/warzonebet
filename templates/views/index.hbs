@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title></title>
+    <link rel="icon" href="/img/weather.png">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="main-content">
+        {{>header}}
+        {{flash}}
+        <div>
+            <p>Compete online in hourly tournaments, betting either 500, 1000, or 1500 tokens. 
+                Finish in the top 30% of players for your timeframe and skill level (ex. 5-6pm UTC, Gold) 
+                and TRIPLE your tokens!</p>
+        </div>
+        <div style="display: flex;">
+            <div>
+                <form action="/auth/register" method="POST">
+                    <input placeholder="Email" required name="email" type="email"><br>
+                    <input placeholder="Password" required name="password" type="password"><br>
+                    <button type="submit" style="margin-top:20px;">Register</button>
+                </form>
+            </div>
+            <div>
+                <form action="/auth/login" method="POST">
+                    <input placeholder="Email" required name="email" type="email"><br>
+                    <input placeholder="Password" required name="password" type="password"><br>
+                    <button type="submit" style="margin-top:20px;">Login</button>
+                </form>
+            </div>
+        </div>
+        
+        <!--<div>
+            <form action="/auth/coduser" method="POST">
+                <input placeholder="username" required name="username"><br>
+                <input placeholder="platform" required name="platform"><br>
+                <button type="submit">Join</button>
+            </form>
+        </div>-->
+        <div>
+            
+        </div>
+        <section id="one" class="wrapper">
+				<div class="inner">
+					<div style="display: flex;">
+						<article style="width: 33%;">
+							<header>
+								<img src='https://altvaton.sirv.com/Images/coin.png' style="height:30px;margin-bottom:16px">
+								<h3>Enter Bet!</h3>
+							</header>
+							<p>Enter a tournament by choosing a time slot and bet amount.
+                                You will then have the entire hour to compete. 
+							</p>
+							<!--<footer>
+								<a href="#" class="button special" style="margin-left: 0">More</a>
+							</footer>-->
+						</article>
+						<article style="width: 33%;">
+							<header>
+								<img src='https://altvaton.sirv.com/Images/arena.png' style="height:45px;margin-bottom:0px">
+								<h3>Play!</h3>
+							</header>
+							<p>Your best match will be counted. If your score is in the top 30% of players in your tournament, TRIPLE your money!
+							</p>
+							<!--<footer>
+								<a href="#" class="button special" style="margin-left: 0">More</a>
+							</footer>-->
+						</article>
+                        <article style="width: 33%;">
+							<header>
+								<img src='https://altvaton.sirv.com/Images/arena.png' style="height:45px;margin-bottom:0px">
+								<h3>Cash Out!</h3>
+							</header>
+							<p>Once we verify you have not cheated, redeem your tokens for either DOGE, BTC or a giftcard. 
+							</p>
+							<!--<footer>
+								<a href="#" class="button special" style="margin-left: 0">More</a>
+							</footer>-->
+						</article>
+					
+					</div>
+				</div>
+			</section>
+        <h2 style="margin-top:50px">Harshest Anti-Cheat policy</h2>
+            <p>We have implemented an algorithm which detects 
+                abnormal behavior (ex. Performance way above average, unrealistic headshot percentage, Wall bang, Reverse Boosting). 
+                If a player on our platform is caught cheating during an hourly tournament, 
+                their entire token balance is equally given to the rest of the participants. 
+            </p>
+        <p id="message-1"></p>
+        <p id="message-2"></p>
+    </div>
+    {{>footer}}
+
+</body>
+
+</html>
