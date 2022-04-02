@@ -3,10 +3,15 @@ const Outcome = require("./models/outcomeSchema");
 const moment = require("moment");
 const schedule = require("node-schedule");
 const Bet = require("./models/betSchema");
+const Betp = require("./models/betpSchema");
+const betResult = require("./utils/betpResult");
+app.use(bodyParser.urlencoded({ extended: true }));
+// parse application/json
+app.use(bodyParser.json());
+
 const { API } = require("@callofduty/api");
 
 require("./db/mongoose");
-
 
 const setTournaments = () => {
   times = [
@@ -33,103 +38,110 @@ const setTournaments = () => {
     "23:00",
   ];
   times.forEach(async (time) => {
-    console.log(time);
     const date = moment.utc().format("MM-DD");
     const days = moment.utc().format("MM-DD HH:mm");
     const newtime = date + " " + time;
+    console.log(newtime)
     const date2 = moment.utc(newtime).format("MM-DD HH:mm");
     const date3 = moment.utc(date2).add(1, "hours").format("MM-DD HH:mm");
-    if(date2 > days){
+    const date4 = moment.utc(date3).add(15, "m").format("MM-DD HH:mm");
+    if (date2 > days) {
       console.log(date2, date3);
-      await Outcome.create({ timeStart: date2, timeEnd: date3});
+      await Outcome.create({
+        timeStart: date2,
+        timeEnd: date3,
+        timeCheck: date4,
+        gameType: "br_brsolo",
+      });
+      await Outcome.create({
+        timeStart: date2,
+        timeEnd: date3,
+        timeCheck: date4,
+        gameType: "br_brduos",
+      });
+      await Outcome.create({
+        timeStart: date2,
+        timeEnd: date3,
+        timeCheck: date4,
+        gameType: "br_brtrios",
+      });
     }
-  
   });
 };
-//schedule.scheduleJob("0 0 * * *", () => {
-  //setTournaments();
-//});
-setTournaments();
+schedule.scheduleJob("0 0 * * *", () => {
+  setTournaments();
+});
+
+
+
 
 const checkReturn = async () => {
-  const CallOfDutyAPI = new API({ xsrf, sso, atkn });
-  var date = moment.utc().format("MM-DD HH:mm");
-  const outcome = await Outcome.findOne({ timeEnd: { $lt: date } });
-  if (!outcome) {
-    console.log("no finished matches across the board");
-  } else {
-    console.log(outcome);
-    const bets = await Bet.find({ timeEnd: outcome.timeEnd });
+  const date = moment.utc().format("MM-DD HH:mm");
+  const bets = await Bet.find({timeEnd: { $lt: date }, status: 'no'});
+  if(bets){
     try {
-      Array.prototype.max = function() {
-        return Math.max.apply(null, this);
-      };
-      Array.prototype.min = function() {
-        return Math.min.apply(null, this);
-      };  
+      var itemsProcessed = 0;
       bets.forEach(async (bet) => {
-        const prof = await CallOfDutyAPI.MatchHistory(
-          { username: bet.creatorUsername, platform: bet.platform },
-          "wz",
-          "mw",
-          0,
-          5
-        );
-        const matches = prof.matches;
-        const email = bet.creatorEmail;
-        let matcheslist = [];
-        matches.forEach((match) => {
-          i = match.playerStats.kills;
-          console.log(i, match.playerStats.teamPlacement);
-          if (match.playerStats.teamPlacement > 11) {
-            matcheslist.push(i);
-          }
-          if (
-            match.playerStats.teamPlacement < 11 &&
-            match.playerStats.teamPlacement > 6
-          ) {
-            matcheslist.push(5 + i);
-          }
-          if (match.playerStats.teamPlacement == 6) {
-            matcheslist.push(6 + i);
-          }
-          if (
-            match.playerStats.teamPlacement < 6 &&
-            match.playerStats.teamPlacement > 1
-          ) {
-            matcheslist.push(8 + i);
-          }
-          if (match.playerStats.teamPlacement == 1) {
-            matcheslist.push(15 + i);
-          }
-        });
-        console.log(email, matcheslist.max(), matcheslist);
-        Bet.findOneAndUpdate(
-          { creatorEmail: email },
-          { totalScore: matcheslist.max() + random, status: "done" },
-          (req, res, error) => {
-            if (error) {
-              console.log(error);
+        console.log(bet.status);
+        if (bet.status == "no" && bet.timeEnd < date) {
+          const year = moment().year();
+          const starttime = moment(year + "-" + bet.timeStart).valueOf();
+          const endtime = moment(year + "-" + bet.timeEnd).valueOf();
+          
+          console.log("herer");
+          userMatches(bet.creatorEmail, bet.platform, bet.creatorUsername, bet.gameType, async (data) => {
+            if(isFinite(data.match) == false){
+              await Bet.deleteMany(
+                { creatorEmail: data.email, timeEnd: bet.timeEnd })
+                
+            }else{
+              await Bet.updateMany(
+                { creatorEmail: data.email },
+                { totalScore: data.match, status: "done" })
             }
-            Outcome.updateOne(
-              { timeStart: res.timeStart },
-              { $addToSet: { scores: [matcheslist.max() + random] } },
-              (req, res, error) => {
-                if (error) {
-                  console.log(error);
-                }
-              }
-            );
+          });
+          itemsProcessed++;
+          if(itemsProcessed === bets.length) {
+            console.log('ey');
           }
-        );
+        } else {
+          res.redirect("/account");
+        }
+        res.redirect("/account");
       });
-      res.redirect("/account");
+
+
     } catch (err) {
       console.log(err);
       res.redirect("/account");
     }
-    const deleted = await Outcome.deleteMany({ timeEnd: { $lt: date } });
+  }else{
+    console.log('none finished')
   }
-
+  
 };
-//setInterval(checkReturn, 60000);
+setInterval(checkReturn, 60000);
+
+
+const checkDeletes = async () => {
+  var date = moment.utc().format("MM-DD HH:mm");
+  const bettodelete = await Bet.deleteMany({ timeDelete: { $gt: date } });
+  const bettodelete = await Betp.deleteMany({ timeDelete: { $gt: date } });
+  if (!bettodelete) {
+    console.log("no stray bets");
+  }
+};
+setInterval(checkDeletes, 60000);
+
+
+
+const personalBets = async () => {
+  var date = moment.utc().format("MM-DD HH:mm");
+  const bets = await Betp.find({ timeEnd: outcome.timeEnd,  });
+  if (bets) {
+    betResult(bets.creatorUsername, bets.opponentUsername)
+  }else{
+    console.log("no stray personal bets");
+  }
+};
+setInterval(personalBets, 60000);

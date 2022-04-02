@@ -63,6 +63,8 @@
             {{/if}}
             <h2>Finished Tournaments</h2>
         {{#if gamesf}}
+                <p>Claim your winnings</p>
+
                  {{#each gamesf}}
                     <p>{{this.timeStart}}</p>
                      <p>{{this.timeEnd}}</p>
@@ -70,7 +72,10 @@
                       <p>{{this.status}}</p>
                       <form action="/auth/claim" method="post">
                           <input value="{{this.timeStart}}" hidden required name="timeStart">
-                          <button type="submit">Claim</button>
+                    <input value="{{this.betAmount}}" hidden required name="betAmount">
+
+                        <input value="{{this.skillLevel}}" hidden required name="skilllevel">
+                          <button type="submit">Claim Winnings</button>
                       </form>
                  {{/each}} 
             {{else}}

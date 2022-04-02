@@ -3,7 +3,11 @@ const mongoose = require("mongoose");
 const outcomeSchema = new mongoose.Schema({
   timeStart: { type: String, required: true },
   timeEnd: { type: String, required: true },
-  scores: []
+  timeCheck: { type: String, required: true },
+  bronze: [],
+  silver: [],
+  diamond: [],
+  gameType: { type: String, required: true },
 });
 
 

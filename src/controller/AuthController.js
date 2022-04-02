@@ -34,7 +34,9 @@ const login = async (req, res, next) => {
     }).then(user => {
         if(user){
             bcrypt.compare(password, user.password, function(err, result){
+                console.log(result)
                 if(err){
+                    console.log(err)
                     req.flash('msg', 'Error')
                     //console.log(req.flash('msg')[0])
                     res.redirect('/')
@@ -44,6 +46,7 @@ const login = async (req, res, next) => {
                     req.session.email = user.email;
                     res.redirect('/account')
                 }else{
+                    console.log(err)
                     req.flash('msg', 'Error')
                     //console.log(req.flash('msg')[0])
                     res.redirect('/')

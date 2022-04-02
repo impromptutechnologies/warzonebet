@@ -10,20 +10,24 @@
 <body>
     <div class="main-content">
         {{>header}}
-        <h2>Place Bet</h2>
+        <h2>Enter Tournament</h2>
         <p>Tokens: {{tokens}}</p>
 
         <form action="/auth/bet" method="post">
-            <p>Tokens</p>
-            <input name="username" value="{{codAccount}}" hidden>
-            <input name="platform" value="{{platform}}" hidden>
-            <select name="amount">
+            <input name="username" value="{{codAccount}}" hidden required>
+            <input name="platform" value="{{platform}}" hidden required>
+            <select name="amount" required>
                 <option value="500">500</option>
                 <option value="1000">1000</option>
                 <option value="1500">1500</option>
             </select>
+            <select name="gametype" required>
+                <option value="br_brsolo">BR Solos</option>
+                <option value="br_brduos">BR Duos</option>
+                <option value="br_brtrios">BR Trios</option>
+            </select>
             <p>Start Time</p>
-           <select name="hour">
+           <select name="hour" required>
                {{#if options}}
                  {{#each options}}
                     <option value="{{this.timeStart}}">{{this.timeStart}}</option>
@@ -34,6 +38,54 @@
                 
             </select><br>
             <button style="margin-top:20px">Enter Tournament</button>
+        </form>
+
+
+
+        <h2 style="margin-top:50px">PvP</h2>
+        <p>Tokens: {{tokens}}</p>
+        <h2>Challenges</h2>
+        {{#if challenge}}
+                 {{#each challenge}}
+                    <p>{{this.opponentUsername}}</p>
+                    <p>{{this.creatorUsername}}</p>
+                    <p>{{this.betAmount}}</p>
+                    <form action="/auth/accept" method="post">
+                        <input value="{{this.creatorUsername}}" name="creatorUsername" required hidden>
+                        <button>Accept</button>
+                    </form>
+                 {{/each}} 
+            {{else}}
+                 <option value="No Time">No challenges</option>
+            {{/if}}
+
+        <form action="/auth/pbet" method="post">
+            <input name="username" value="{{codAccount}}" hidden required>
+            <input name="platform" value="{{platform}}" hidden required>
+            <input name="opponentusername" placeholder="opponent username" required>
+            <input name="opponentplatform" placeholder="opponent platform" required>
+            <select name="amount" required>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+                <option value="1500">1500</option>
+            </select>
+            <select name="gametype" required>
+                <option value="br_brsolo">BR Solos</option>
+                <option value="br_brduos" disabled>BR Duos (soon)</option>
+                <option value="br_brtrios" disabled>BR Trios (soon)</option>
+            </select>
+            <p>Start Time: When opponent accepts</p>
+           <!--<select name="hour" required>
+               {{#if options}}
+                 {{#each options}}
+                    <option value="{{this.timeStart}}">{{this.timeStart}}</option>
+                 {{/each}} 
+            {{else}}
+                 <option value="No Time">No Times</option>
+            {{/if}}
+                
+            </select>--><br>
+            <button style="margin-top:0px">Enter Tournament</button>
         </form>
 
         

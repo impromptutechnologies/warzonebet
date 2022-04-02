@@ -7,6 +7,7 @@ const profileSchema = new mongoose.Schema({
     codUsername: {type:String, default:'', required:false},
     codPlatform: {type:String, default:'', required:false},
     verified:{type:String, default:'no', required:true},
+    skillLevel:{type:String, default:'', required:false},
     payments:[]
 }, {timestamps: true});
 
